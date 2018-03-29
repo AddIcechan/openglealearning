@@ -6,5 +6,5 @@
 
 第一个 [Demo](https://github.com/AddIcechan/opengleslearning/tree/master/OpenGLES_Demo/OpenGLES_1) 是配合 GLKit 来绘制一个三角形。
 
-![p1](/OpenGLES_Demo/OpenGLES_1/result.png)
+![p1](https://github.com/AddIcechan/opengleslearning/raw/master/OpenGLES_Demo/OpenGLES_1/result.png)
 

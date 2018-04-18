@@ -107,7 +107,7 @@ class GLKDemoController: GLKViewController {
         baseEffect.prepareToDraw()
 
         // 清除屏幕的颜色缓存
-        glClear(GLbitfield(GL_COLOR_BUFFER_BIT));
+        glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
 
         // 4. 告诉 OpenGL 在接下来的渲染中是否使用缓存数据
         glEnableVertexAttribArray(GLuint(GLKVertexAttrib.position.rawValue))

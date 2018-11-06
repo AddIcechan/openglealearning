@@ -10,6 +10,10 @@ import UIKit
 import OpenGLES
 import GLKit
 
+protocol HandlerProtocol {
+    func setBtn(_ de: String, handler: ()->())
+}
+
 struct SceneVertex {
     var positionCoords : GLKVector3
     
@@ -18,16 +22,9 @@ struct SceneVertex {
     }
 }
 
-extension Array {
-    
-    var size : Int {
-       return count * MemoryLayout<Element>.size
-    }
-    
-}
 
 class GLKDemoController: GLKViewController {
-
+    
     /* 引用：
      OpenGL自身是一个巨大的状态机(State Machine)：一系列的变量描述OpenGL此刻应当如何运行。OpenGL的状态通常被称为OpenGL上下文(Context)。我们通常使用如下途径去更改OpenGL状态：设置选项，操作缓冲。最后，我们使用当前OpenGL上下文来渲染。
      */
@@ -45,10 +42,12 @@ class GLKDemoController: GLKViewController {
     
     /// 顶点数据， 使用 三个顶点 来绘制一个 三角形, GLKVector3 相当于空间坐标轴的三个顶点，xyz，每个坐标轴的范围均是 [-1,1]。另外，空间坐标轴的原点是在屏幕中心
     lazy var vertor3s: [GLKVector3] =  [
-                                          GLKVector3(v: (-1, -1, 0)),       // 左下角
-                                          GLKVector3(v: (1, -1, 0)),        // 右下角
-                                          GLKVector3(v: (-1, 1, 0))         // 左上角
+                                          GLKVector3(v: (-0.5, -0.5, 0)),       // 左下角
+                                          GLKVector3(v: (0.5, -0.5, 0)),        // 右下角
+                                          GLKVector3(v: (-0.5, 0.5, 0)),         // 左上角
+                                          GLKVector3(v: (0.5, 0.5, 0)),
                                         ]
+    
     
     /// 缓存的唯一标识符，当前表示为 0。而 0 也恰恰表示没有缓存
     lazy var vertextBufferId = GLuint()
@@ -81,6 +80,8 @@ class GLKDemoController: GLKViewController {
         glBufferData(GLenum(GL_ARRAY_BUFFER), vertor3s.size, vertor3s, GLenum(GL_STATIC_DRAW))
         
         // 由于是使用了 GLKView ，当其被告知重绘时，会发送消息去调用 GLKViewDelegate 的 glkView(_ view: GLKView, drawIn rect: CGRect) 代理方法。因此需要实现 其代理方法，并且在放方法中进行渲染操作
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -112,9 +113,10 @@ class GLKDemoController: GLKViewController {
         // 4. 告诉 OpenGL 在接下来的渲染中是否使用缓存数据
         glEnableVertexAttribArray(GLuint(GLKVertexAttrib.position.rawValue))
         // 5. 告诉 OpenGL 在缓存中的数据的类型和所有需要访问的数据的内存偏移值。该函数有 6 个参数。1⃣️表示当前绑定的缓存包含每个顶点的位置信息；2⃣️表示每个顶点是有三个元素组成的，其实就是xyz；3⃣️表示每个部分都保存为一个浮点型的数据；4⃣️表示小数点固定数据是否可以被改变；5⃣️表示每个顶点数据所占的字节大小，也叫“步幅”；6⃣️使用nil，表示可以从当前绑定的顶点缓存的开始位置访问顶点数据
-        glVertexAttribPointer(GLuint(GLKVertexAttrib.position.rawValue), GLint(3), GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(MemoryLayout<SceneVertex>.size), nil)
+        glVertexAttribPointer(GLuint(GLKVertexAttrib.position.rawValue), GLint(3), GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(MemoryLayout<GLKVector3>.size), nil)
         // 6. 执行绘图。该函数有 3 个参数。1⃣️表示绘图类型；2⃣️表示缓存里的需要渲染的第一个顶点的位置；3⃣️表示需要渲染的顶点个数
-        glDrawArrays(GLenum(GL_TRIANGLES), 0, GLsizei(vertor3s.count))
+        
+        glDrawArrays(GLenum(GL_TRIANGLE_STRIP), 0, GLsizei(vertor3s.count))
 
     }
     

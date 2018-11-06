@@ -16,12 +16,6 @@ struct SceneVertex {
 
 typedef struct SceneVertex SceneVertex;
 
-//typedef struct {
-//    GLKVector3  positionCoords;
-//    GLKVector2  textureCoords;
-//}
-//SceneVertex;
-
 static const SceneVertex vertices[] =
 {
     {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}}, // lower left corner
@@ -43,16 +37,6 @@ static const SceneVertex vertices[] =
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-//    dispatch_block_wait(^{
-//        
-//        NSLog(@"111");
-//        
-//        sleep(2);
-//        
-//        NSLog(@"222");
-//        
-//    }, DISPATCH_TIME_NOW);
     
     GLKView *view = (GLKView *)self.view;
     
@@ -81,7 +65,6 @@ static const SceneVertex vertices[] =
     
     
     
-    
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
@@ -90,10 +73,11 @@ static const SceneVertex vertices[] =
     
     glClear(GL_COLOR_BUFFER_BIT);
     
+    // GLKVertexAttribPosition 指的是给着色器提供的顶点位置
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    
     glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(SceneVertex), NULL + offsetof(SceneVertex, positionCoords));
     
+    // GLKVertexAttribTexCoord0 指的是给着色器提供的纹理坐标
     glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
     glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(SceneVertex), NULL + offsetof(SceneVertex, textureCoords));
     

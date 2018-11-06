@@ -9,6 +9,7 @@
 import UIKit
 import OpenGLES
 import GLKit
+import WebKit
 
 //struct SceneVertex {
 //    var positionCoords : GLKVector3
@@ -35,9 +36,9 @@ class ViewController: UIViewController {
     
     /// 顶点数据， 使用 三个顶点 来绘制一个 三角形, GLKVector3 相当于空间坐标轴的三个顶点，xyz，每个坐标轴的范围均是 [-1,1]。另外，空间坐标轴的原点是在屏幕中心
     lazy var vertor3s: [GLKVector3] =  [
-        GLKVector3(v: (-1, -1, 0)),       // 左下角
-        GLKVector3(v: (1, -1, 0)),        // 右下角
-        GLKVector3(v: (-1, 1, 0))         // 左上角
+        GLKVector3(v: (-0.5, -0.5, 0)),       // 左下角
+        GLKVector3(v: (0.5, -0.5, 0)),        // 右下角
+        GLKVector3(v: (-0.5, 0.5, 0))         // 左上角
     ]
     
     /// 缓存的唯一标识符，当前表示为 0。而 0 也恰恰表示没有缓存
@@ -68,6 +69,8 @@ class ViewController: UIViewController {
         glBindBuffer(GLenum(GL_ARRAY_BUFFER), vertextBufferId)
         // 3. 复制顶点数据到当前 context 所绑定的缓存顶点数据。 GL_ARRAY_BUFFER 是 OpenGL 的缓存对象类型之一。而 glBufferData(,,,) 的四个参数，1⃣️表示 缓存对象类型；2⃣️表示顶点数据的内存大小；3⃣️表示我们需要的数据；4⃣️表示我们希望显卡怎样管理我们的数据，GL_STATIC_DRAW 指数据不会或几乎不会改变，另外还有 GL_DYNAMIC_DRAW 指数据会被改变很多，GL_STREAM_DRAW 指数据每次绘制都会改变
         glBufferData(GLenum(GL_ARRAY_BUFFER), vertor3s.count * MemoryLayout<GLKVector3>.size, vertor3s, GLenum(GL_STATIC_DRAW))
+        
+        
         
     }
 

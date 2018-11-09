@@ -15,7 +15,7 @@ class ViewController: GLKViewController {
 
     
     lazy var postions : [GLfloat] = [
-        -0.5, -0.5, 0.0, 1, 0, 1,
+        -0.5, -0.5, 0.0, 1, 0, 0,
         0.5, -0.5, 0.0,  0, 1, 0,
         0.0,  0.5, 0.0,   0, 0, 1,
     ]
@@ -59,42 +59,43 @@ class ViewController: GLKViewController {
         }
         
         // 链接shader
-        
         glAttachShader(shaderProgram, vertextShader)
         glAttachShader(shaderProgram, fragmentShader)
         glLinkProgram(shaderProgram)
         
         glGetShaderiv(shaderProgram, GLenum(GL_LINK_STATUS), nil)
+
+        defer {
+            glDeleteShader(vertextShader)
+            glDeleteShader(fragmentShader)
+        }
         
-//        glDeleteShader(vertextShader)
-//        glDeleteShader(fragmentShader)
-        
+        glUseProgram(shaderProgram)
         
         glGenVertexArrays(1, &VAO)
         glGenBuffers(1, &VBO)
-        
+
         glBindVertexArray(VAO)
         glBindBuffer(GLenum(GL_ARRAY_BUFFER), VBO)
-        
+
         glBufferData(GLenum(GL_ARRAY_BUFFER), MemoryLayout<GLfloat>.size * postions.count, postions, GLenum(GL_STATIC_DRAW))
         
-        glVertexAttribPointer(0, 3, GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(MemoryLayout<GLfloat>.size), nil)
-        glEnableVertexAttribArray(0)
+        let posistionAtt : GLuint = GLuint(glGetAttribLocation(shaderProgram, "position"))
+        
+        glVertexAttribPointer(posistionAtt, 3, GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(6 * MemoryLayout<GLfloat>.size), nil)
+        glEnableVertexAttribArray(posistionAtt)
         
         let ptr = UnsafePointer<Int>.init(bitPattern: 3 * MemoryLayout<GLfloat>.size)
         
-        glVertexAttribPointer(1, 3, GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(MemoryLayout<GLfloat>.size), ptr)
-        glEnableVertexAttribArray(1)
-        
-        glBindVertexArray(0)
-        
-        
+        let colorAtt : GLuint = GLuint(glGetAttribLocation(shaderProgram, "color"))
+        glVertexAttribPointer(colorAtt, 3, GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(6 * MemoryLayout<GLfloat>.size), ptr)
+        glEnableVertexAttribArray(colorAtt)
         
     }
     
     override func glkView(_ view: GLKView, drawIn rect: CGRect) {
         
-        glUseProgram(shaderProgram)
+        
         
         glBindVertexArray(VAO)
         
